@@ -1,4 +1,4 @@
-import nltk
+import random
 import re
 import pandas as pd
 import numpy as np
@@ -301,15 +301,17 @@ all_keywords_list = {
 }
 
 def book_recommend(genre_list):
-    selected_slices = []
-    selected_keywords = []
+    recommend_df=pd.DataFrame()
     for genre in genre_list:
         if genre in slice_df_cluster:
-            selected_slices.append(slice_df_cluster[genre])
-            selected_keywords.append(all_keywords_list[genre])
+            recommend_df=pd.concat([recommend_df,slice_df_cluster[genre]])
         else:
             print(f"Warning: Genre '{genre}' not recognized.")
-    return selected_slices, selected_keywords
+    recommend_isbn=recommend_df['ISBN_THIRTEEN_NO'].to_list()
+    recommend_isbn_slice=random.sample(recommend_isbn,15)
+
+
+    return recommend_isbn
 
 
 def load_model(model_name='jhgan/ko-sroberta-multitask'):
@@ -365,18 +367,28 @@ def find_similar_books(embedder, selected_slices, selected_keywords, top_k=150):
     return sim_book
 
 
-def main():
+def main(genre_list):
     # 사용 예제
+    genre_list=genre_list
     input_genres = ["poem", "sf", "psycho"]  # 사용자로부터 입력받은 장르 리스트
+
 
     embedder = load_model()
     selected_slices, selected_keywords = get_slices_and_keywords_by_genres(input_genres)
+
+    #non-filter book
     sim_book = find_similar_books(embedder, selected_slices, selected_keywords)
 
-    # 결과 출력 (예시)
-    for i, books in enumerate(sim_book):
-        print(f"Genre {input_genres[i]} similar books ISBNs:", books)
+    #just_genre_book
+    recommend_list_isbn=book_recommend(genre_list)
+
+
+    print(sim_book)
+
+
+
 
 
 if __name__ == "__main__":
-    main()
+    genre_list = ['romance','sf','history']
+    main(genre_list)
