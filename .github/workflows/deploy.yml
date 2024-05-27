@@ -38,4 +38,4 @@ jobs:
             docker pull zlsoo9ee/fastapi_app:latest
             docker stop fastapi_app || true
             docker rm fastapi_app || true
-            docker run -d --name fastapi_app -p 80:80 zlsoo9ee/fastapi_app:latest
+            docker run -d --name fastapi_app -p 80:8000 zlsoo9ee/fastapi_app:latest
