@@ -1,4 +1,4 @@
-name: Deploy FastAPI Application
+name: Deploy FastAPI Application with Nginx
 
 on:
   push:
@@ -38,4 +38,4 @@ jobs:
             sudo docker pull zlsoo9ee/fastapi_app:latest
             sudo docker stop fastapi_app || true
             sudo docker rm fastapi_app || true
-            sudo docker run -d --name fastapi_app -p 80:8000 zlsoo9ee/fastapi_app:latest
+            sudo docker run -d --name fastapi_app -p 8000:80 zlsoo9ee/fastapi_app:latest
