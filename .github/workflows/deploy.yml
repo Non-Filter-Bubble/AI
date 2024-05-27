@@ -1,0 +1,41 @@
+name: Deploy FastAPI Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t zlsoo9ee/fastapi_app .
+          docker tag zlsoo9ee/fastapi_app zlsoo9ee/fastapi_app:latest
+          docker push zlsoo9ee/fastapi_app:latest
+
+      - name: SSH and deploy to EC2
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull zlsoo9ee/fastapi_app:latest
+            docker stop fastapi_app || true
+            docker rm fastapi_app || true
+            docker run -d --name fastapi_app -p 80:80 zlsoo9ee/fastapi_app:latest
