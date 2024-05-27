@@ -8,7 +8,6 @@ app = FastAPI()
 origins = [
     "http://43.200.64.238",   # FastAPI 애플리케이션의 도메인
     "http://43.203.38.124:8080",  # Spring 애플리케이션의 도메인
-    # 필요 시 추가 도메인 추가
 ]
 
 app.add_middleware(
