@@ -24,9 +24,9 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          sudo docker build -t zlsoo9ee/fastapi_app .
-          sudo docker tag zlsoo9ee/fastapi_app zlsoo9ee/fastapi_app:latest
-          sudo docker push zlsoo9ee/fastapi_app:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/fastapi_app .
+          docker tag ${{ secrets.DOCKER_USERNAME }}/fastapi_app ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
 
       - name: SSH and deploy to EC2
         uses: appleboy/ssh-action@v0.1.4
@@ -35,7 +35,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo docker pull zlsoo9ee/fastapi_app:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
             sudo docker stop fastapi_app || true
             sudo docker rm fastapi_app || true
-            sudo docker run -d --name fastapi_app -p 80:8000 zlsoo9ee/fastapi_app:latest
+            sudo docker run -d --name fastapi_app -p 80:8000 ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
