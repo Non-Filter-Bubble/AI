@@ -11,14 +11,15 @@ COPY . .
 # Production stage
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8 AS production
 
-COPY --from=builder /app /app
-
 # Install Nginx
 RUN apt-get update \
-    && apt-get install -y nginx
+    && apt-get install -y nginx \
+    && rm /etc/nginx/sites-enabled/default
+
+COPY --from=builder /app /app
 
 # Copy Nginx configuration file
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY /nginx.conf /etc/nginx/nginx.conf
 
 # Expose ports
 EXPOSE 80
