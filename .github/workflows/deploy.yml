@@ -25,7 +25,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           sudo docker build -t zlsoo9ee/fastapi_app .
-          sudi docker tag zlsoo9ee/fastapi_app zlsoo9ee/fastapi_app:latest
+          sudo docker tag zlsoo9ee/fastapi_app zlsoo9ee/fastapi_app:latest
           sudo docker push zlsoo9ee/fastapi_app:latest
 
       - name: SSH and deploy to EC2
