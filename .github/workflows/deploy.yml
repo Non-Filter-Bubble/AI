@@ -34,7 +34,6 @@ jobs:
           docker tag ${{ secrets.DOCKER_USERNAME }}/nginx ${{ secrets.DOCKER_USERNAME }}/nginx:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/nginx:latest
 
-
       - name: SSH and deploy to EC2
         uses: appleboy/ssh-action@v0.1.4
         with:
@@ -49,18 +48,12 @@ jobs:
             else
               echo "Nginx is not running."
             fi
-            
+
             # Stop and remove existing containers
-            sudo docker stop fastapi_app || true
-            sudo docker rm fastapi_app || true
-            sudo docker stop nginx || true
-            sudo docker rm nginx || true
-      
+            sudo docker-compose down
+
             # Pull the latest images
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/nginx:latest
-            
-            # Run new containers with port binding
-            sudo docker run -d --name fastapi_app -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
-            sudo docker run -d --name nginx --restart=always -p 8081:80 ${{ secrets.DOCKER_USERNAME }}/nginx:latest
-        
+            sudo docker-compose pull
+
+            # Run new containers with docker-compose
+            sudo docker-compose up -d
