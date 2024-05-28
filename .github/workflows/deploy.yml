@@ -41,16 +41,17 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Pull the latest images
+            echo "Pulling Docker images..."
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/nginx:latest
-
-            # Stop and remove existing containers
+    
+            echo "Stopping and removing existing containers..."
             sudo docker stop fastapi_app || true
             sudo docker rm fastapi_app || true
             sudo docker stop nginx || true
             sudo docker rm nginx || true
-
-            # Run new containers
+    
+            echo "Running new containers..."
             sudo docker run -d --name fastapi_app -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
             sudo docker run -d --name nginx -p 80:80 ${{ secrets.DOCKER_USERNAME }}/nginx:latest
+  
