@@ -19,6 +19,6 @@ async def read_root():
 
 @app.get("/test")
 async def send_request_to_spring():
-    async def echo_message(message: str):
+    async def test_message(message: str):
         return message 
 
