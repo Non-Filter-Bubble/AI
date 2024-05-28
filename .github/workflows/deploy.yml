@@ -45,6 +45,7 @@ jobs:
           script: |
             sudo ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
             sudo ssh -i ${{ secrets.EC2_SSH_KEY }} ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
-            sudo docker-compose -f /home/ubuntu/docker-compose.yml up -d
+              sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
+              sudo docker-compose -f /home/ubuntu/docker-compose.yml up -d
             ENDSSH
+
