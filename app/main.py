@@ -1,43 +1,28 @@
 # from fastapi import FastAPI
-# from fastapi.middleware.cors import CORSMiddleware
-# import requests
 
 # app = FastAPI()
 
-# # CORS 설정
-# origins = [
-#     "http://43.200.64.238",   # FastAPI 애플리케이션의 도메인
-#     "http://43.203.38.124:8080",  # Spring 애플리케이션의 도메인
-# ]
-
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=origins,
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
 # @app.get("/")
-# async def root():
-#     return {"message": "Hello from FastAPI!"}
-
-# @app.get("/test")
-# async def test():
-#     # Spring 애플리케이션에 요청 보내기
-#     spring_app_url = "http://43.203.38.124:8080/test"
-#     response = requests.get(spring_app_url)
-    
-#     return {"response_from_spring": response.text}
-
-# if __name__ == '__main__':
-#     import uvicorn
-#     uvicorn.run(app, host='0.0.0.0', port=80)
+# async def read_root():
+#     return {"message": "Hello, World"}
 
 from fastapi import FastAPI
+import requests
 
 app = FastAPI()
+
+SPRING_APP_URL = "http://43.203.38.124:8080"
 
 @app.get("/")
 async def read_root():
     return {"message": "Hello, World"}
+
+@app.get("/test")
+async def send_request_to_spring():
+    try:
+        response = requests.get(f"{SPRING_APP_URL}/test")
+        response.raise_for_status()  # 오류가 발생하면 예외를 발생시킴
+        return response.json()
+    except requests.RequestException as e:
+        return {"error": f"Failed to connect to Spring application: {e}"}
+
