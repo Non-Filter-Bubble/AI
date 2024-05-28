@@ -42,7 +42,6 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          port: 8000
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
             sudo docker stop my-ai-app || true
