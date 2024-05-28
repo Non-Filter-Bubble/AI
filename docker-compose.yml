@@ -15,4 +15,6 @@ services:
       dockerfile: Dockerfile.nginx
     ports:
       - "80:80"
+    depends_on:
+      - fastapi
     restart: always
