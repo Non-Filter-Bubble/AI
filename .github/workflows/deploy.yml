@@ -36,15 +36,15 @@ jobs:
           # Push Docker image to Docker Hub
           docker push ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
         
-          - name: Deploy to AWS EC2
-          uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.EC2_HOST }}
-            username: ${{ secrets.EC2_USER }}
-            key: ${{ secrets.EC2_SSH_KEY }}
-            script: |
-              sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
-              sudo docker stop my-ai-app || true
-              sudo docker rm my-ai-app || true
-              sudo docker run -d --name my-react-app -p 80:80 ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
+      - name: Deploy to AWS EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
+            sudo docker stop my-ai-app || true
+            sudo docker rm my-ai-app || true
+            sudo docker run -d --name my-react-app -p 80:80 ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
 
