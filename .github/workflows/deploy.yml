@@ -24,15 +24,9 @@ jobs:
 
       - name: Build and push Docker image for FastAPI
         run: |
-          docker build -f Dockerfile.fastapi -t ${{ secrets.DOCKER_USERNAME }}/fastapi_app .
-          docker tag ${{ secrets.DOCKER_USERNAME }}/fastapi_app ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
-
-      - name: Build and push Docker image for Nginx
-        run: |
-          docker build -f Dockerfile.nginx -t ${{ secrets.DOCKER_USERNAME }}/nginx .
-          docker tag ${{ secrets.DOCKER_USERNAME }}/nginx ${{ secrets.DOCKER_USERNAME }}/nginx:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/nginx:latest
+          sudo docker build -t my-ai-app .
+          sudo docker tag my-ai-app ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
+          sudo docker push ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
 
       - name: SSH and deploy to EC2
         uses: appleboy/ssh-action@v0.1.4
@@ -41,45 +35,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Check if Nginx is running and stop it if it is
-            if sudo service nginx status >/dev/null; then
-              echo "Nginx is running, stopping it..."
-              sudo service nginx stop
-            else
-              echo "Nginx is not running."
-            fi
-
-            # Install docker-compose
-            sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-            sudo chmod +x /usr/local/bin/docker-compose
-            sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-            
-            # Stop and remove existing containers
-            sudo docker-compose down || true
-
-            # Pull the latest images
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/nginx:latest
-            
-            # Create docker-compose.yml
-            echo "
-            version: '3.8'
-            
-            services:
-              fastapi:
-                image: ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
-                ports:
-                  - '8000:8000'
-                restart: always
-            
-              nginx:
-                image: ${{ secrets.DOCKER_USERNAME }}/nginx:latest
-                ports:
-                  - '80:80'
-                depends_on:
-                  - fastapi
-                restart: always
-            " | sudo tee /home/ubuntu/docker-compose.yml
-            
-            # Run new containers with Docker Compose
+            sudo ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+            sudo ssh -i ${{ secrets.EC2_SSH_KEY }} ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
             sudo docker-compose -f /home/ubuntu/docker-compose.yml up -d
+            ENDSSH
