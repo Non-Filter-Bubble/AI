@@ -49,11 +49,37 @@ jobs:
               echo "Nginx is not running."
             fi
 
+            # Install docker-compose
+            sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+            
             # Stop and remove existing containers
-            sudo docker-compose down
+            sudo docker-compose down || true
 
             # Pull the latest images
-            sudo docker-compose pull
-
-            # Run new containers with docker-compose
-            sudo docker-compose up -d
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/nginx:latest
+            
+            # Create docker-compose.yml
+            echo "
+            version: '3.8'
+            
+            services:
+              fastapi:
+                image: ${{ secrets.DOCKER_USERNAME }}/fastapi_app:latest
+                ports:
+                  - '8000:8000'
+                restart: always
+            
+              nginx:
+                image: ${{ secrets.DOCKER_USERNAME }}/nginx:latest
+                ports:
+                  - '80:80'
+                depends_on:
+                  - fastapi
+                restart: always
+            " | sudo tee /home/ubuntu/docker-compose.yml
+            
+            # Run new containers with Docker Compose
+            sudo docker-compose -f /home/ubuntu/docker-compose.yml up -d
