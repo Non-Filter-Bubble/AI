@@ -15,7 +15,7 @@ SPRING_APP_URL = "http://43.203.38.124:8080"
 
 @app.get("/")
 async def read_root():
-    return {"message": "Hello, World"}
+    return {"message": "Hello, World in AI"}
 
 @app.get("/test/{message}")
 async def test_message(message: str):
