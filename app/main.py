@@ -19,4 +19,4 @@ async def read_root():
 
 @app.get("/test/{message}")
 async def test_message(message: str):
-    return {"test": message}
+    return {"test with ai": message}
