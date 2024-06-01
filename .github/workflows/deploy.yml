@@ -53,4 +53,4 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
             sudo docker stop my-ai-app || true
             sudo docker rm my-ai-app || true
-            sudo docker run -d --name my-ai-app -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
+            sudo docker run -d --name my-ai-app -p 80:80 ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
