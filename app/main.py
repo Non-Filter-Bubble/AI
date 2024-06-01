@@ -15,13 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+
 
 SPRING_APP_URL = "http://43.203.38.124:8080"
 #ai server : http://43.200.64.238:8000/
@@ -36,12 +30,12 @@ async def process_genres(request: GenreRequest):
     genres = request.genres
 
     # AI 모델을 이용한 처리 로직 (예시)
-    result = process_genres_with_ai(user_id, genres)
-    # result={
-    #     "user_id": user_id,
-    #     "isbn": [[123,156,456],[123,156,456]]
-    # }
 
+    # result = process_genres_with_ai(user_id, genres)
+    result={
+        "user_id": user_id,
+        "isbn": [[123,156,456],[123,156,456]]
+    }
     return result
 
 def process_genres_with_ai(user_id: str, genres: List[str]):
