@@ -15,6 +15,18 @@ from typing import List
 
 app = FastAPI()
 
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 SPRING_APP_URL = "http://43.203.38.124:8080"
 #ai server : http://43.200.64.238:8000/
 
