@@ -1,34 +1,47 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim AS base
+# # Use an official Python runtime as a parent image
+# FROM python:3.9-slim AS base
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# # Set environment variables
+# ENV PYTHONDONTWRITEBYTECODE 1
+# ENV PYTHONUNBUFFERED 1
 
-# Install system dependencies
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        gcc \
-        nginx \
-    && rm -rf /var/lib/apt/lists/*
+# # Install system dependencies
+# RUN apt-get update \
+#     && apt-get install -y --no-install-recommends \
+#         gcc \
+#         nginx \
+#     && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory in the container
+# # Set the working directory in the container
+# WORKDIR /app
+
+# # Copy the dependencies file to the working directory
+# COPY requirements.txt .
+
+# # Install any needed packages specified in requirements.txt
+# RUN pip install --no-cache-dir -r requirements.txt
+
+# # Copy the application code to the working directory
+# COPY . .
+
+# # Copy nginx.conf to the container
+# COPY nginx.conf /etc/nginx/nginx.conf
+
+# # Expose port 80 to the outside world
+# EXPOSE 80
+
+# # Start Nginx and Uvicorn
+# CMD ["sh", "-c", "service nginx start && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+
+# Dockerfile
+
+FROM python:3.9-slim
+
 WORKDIR /app
 
-# Copy the dependencies file to the working directory
-COPY requirements.txt .
-
-# Install any needed packages specified in requirements.txt
+COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code to the working directory
 COPY . .
 
-# Copy nginx.conf to the container
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Expose port 80 to the outside world
-EXPOSE 80
-
-# Start Nginx and Uvicorn
-CMD ["sh", "-c", "service nginx start && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
