@@ -28,7 +28,7 @@ COPY . .
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose port 80 to the outside world
-EXPOSE 80
+EXPOSE 8000
 
 # Start Nginx and Uvicorn
 CMD service nginx start && uvicorn app.main:app --host 0.0.0.0 --port 8000
