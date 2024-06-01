@@ -31,4 +31,4 @@ COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 
 # Start Nginx and Uvicorn
-CMD service nginx start && uvicorn app.main:app --host 0.0.0.0 --port 8000
+CMD ["sh", "-c", "service nginx start && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
