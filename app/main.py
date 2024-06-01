@@ -11,7 +11,7 @@ import requests
 import uvicorn
 from pydantic import BaseModel
 from typing import List
-
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
