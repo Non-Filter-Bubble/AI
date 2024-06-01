@@ -24,6 +24,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the application code to the working directory
 COPY . .
 
+# Copy nginx.conf to the container
+COPY nginx.conf /etc/nginx/nginx.conf
+
 # Expose port 80 to the outside world
 EXPOSE 8000
 
