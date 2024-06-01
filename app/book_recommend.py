@@ -2,9 +2,9 @@ import random
 import re
 import pandas as pd
 import numpy as np
-from sentence_transformers import SentenceTransformer, models,util
 
 df=pd.read_csv('last_book.csv',index_col=False)
+
 def remove_special_characters_and_make_list(input_string):
     # 특수문자 제거
     cleaned_string = re.sub(r'[^\w\s,]', '', input_string)
@@ -311,7 +311,7 @@ def book_recommend(genre_list):
     recommend_isbn_slice=random.sample(recommend_isbn,15)
 
 
-    return recommend_isbn
+    return recommend_isbn_slice
 
 
 def load_model(model_name='jhgan/ko-sroberta-multitask'):
@@ -336,7 +336,7 @@ def get_slices_and_keywords_by_genres(genres):
     return selected_slices, selected_keywords
 
 
-def find_similar_books(embedder, selected_slices, selected_keywords, top_k=150):
+def find_similar_books(embedder, selected_slices, selected_keywords, top_k=25):
     """
     각 슬라이스에 대해 유사한 책을 찾고 ISBN 리스트를 반환합니다.
     """
@@ -370,7 +370,7 @@ def find_similar_books(embedder, selected_slices, selected_keywords, top_k=150):
 def main(genre_list):
     # 사용 예제
     genre_list=genre_list
-    input_genres = ["poem", "sf", "psycho"]  # 사용자로부터 입력받은 장르 리스트
+    input_genres = genre_list  # 사용자로부터 입력받은 장르 리스트
 
 
     embedder = load_model()
@@ -381,10 +381,6 @@ def main(genre_list):
 
     #just_genre_book
     recommend_list_isbn=book_recommend(genre_list)
-
-
-    print(sim_book)
-
 
 
 
