@@ -28,4 +28,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the FastAPI application
-CMD uvicorn --host=0.0.0.0 --port 8000 app.main:app
+CMD uvicorn --host=0.0.0.0 --port 80 app.main:app
