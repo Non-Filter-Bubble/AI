@@ -52,10 +52,8 @@ jobs:
       - name: Delete untagged Docker images
         run: |
           images=$(docker images -f "dangling=true" -q)
-          if [ -n "$images" ]; then
-            echo "$images" | xargs docker rmi
-          else
-            echo "No dangling images to delete"
-          fi
+          for image_id in $images; do
+              docker rmi -f $image_id
+          done
 
           
