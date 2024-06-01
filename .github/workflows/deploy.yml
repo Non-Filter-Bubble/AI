@@ -22,15 +22,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Delete untagged Docker images
-        run: |
-          images=$(docker images -f "dangling=true" -q)
-          if [ -n "$images" ]; then
-            echo "$images" | xargs docker rmi -f
-          else
-            echo "No dangling images to delete"
-          fi
-          
       - name: Build and push Docker image for FastAPI
         run: |
           # Build Docker image
@@ -57,3 +48,8 @@ jobs:
             sudo docker rm my-ai-app || true
             sudo docker run -d --name my-ai-app -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
 
+
+      - name: Delete untagged Docker images
+        run: |
+          docker images -f "dangling=true" -q | xargs docker rmi
+          
