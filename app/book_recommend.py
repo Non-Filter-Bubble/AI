@@ -263,7 +263,7 @@ relation_sim_slice=relation_sim[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline
 
 from sentence_transformers import SentenceTransformer, models,util
 
-embedder = SentenceTransformer("jhgan/ko-sroberta-multitask")
+#embedder = SentenceTransformer("jhgan/ko-sroberta-multitask")
 
 
 slice_df_cluster = {
