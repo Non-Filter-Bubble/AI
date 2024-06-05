@@ -1,17 +1,11 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException
 import requests
 import uvicorn
 from pydantic import BaseModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
-import logging
 
 app = FastAPI()
-
-# # 로깅 설정
-# logging.basicConfig(level=logging.INFO)
-# logger = logging.getLogger(__name__)
-
 
 # CORS 설정
 origins = [
@@ -30,7 +24,6 @@ app.add_middleware(
     max_age=3600,
 )
 
-
 SPRING_APP_URL = "http://43.203.38.124:8080"
 #ai server : http://43.200.64.238:8000/
 
@@ -39,26 +32,12 @@ class GenreRequest(BaseModel):
     genres : List[str]
 
 
-
-# @app.middleware("http")
-# async def log_requests(request: Request, call_next):
-#     logger.info(f"Request: {request.method} {request.url}")
-#     response = await call_next(request)
-#     logger.info(f"Response status: {response.status_code}")
-#     return response
-
-
-
 @app.post("/ai/books")
 async def process_genres(request: GenreRequest):
     user_id = request.user_id
     genres = request.genres
-
-    # logger.info(f"Processing genres for user_id: {user_id} with genres: {genres}")
-
-    
+  
     # AI 모델을 이용한 처리 로직 (예시)
-
     # result = process_genres_with_ai(user_id, genres)
     result={
         "user_id": user_id,
@@ -69,7 +48,7 @@ async def process_genres(request: GenreRequest):
                 [9788932909998, 9791158887605, 9791189433550, 9788994343587, 9791196205591, 9788952234247, 9788983927767, 9791196443146, 9791187589419, 9788954676465, 9791127864606, 9791198084651, 9791197708572, 9788946422056, 9791167850249]
     }
     return result
-
+    
 def process_genres_with_ai(user_id: int, genres: List[str]):
     # AI 모델 로직 예시
     # 실제로는 여기서 AI 모델을 사용하여 추천 및 기타 작업을 수행
@@ -78,27 +57,11 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
         "recommended_movie": "Inception",
         "confidence_score": 0.95
     }
-
+    
 @app.get("/")
 async def read_root():
     return {"message": "Hello, World with FASTAPI"}
-
-
+    
 @app.get("/test/{message}")
 async def test_message(message: str):
     return {"test ": message}
-
-
-
-# @app.get("/send-request-to-ai-server")
-# async def send_request_to_ai_server():
-#     # AI 서버로 GET 요청 보내기
-#     ai_server_url = "http://3.37.204.233/"
-#     response = requests.get(ai_server_url)
-
-#     # 응답 확인
-#     if response.status_code == 200:
-#         return {"message": "Successfully sent request to AI server"}
-#     else:
-#         return {"message": "Failed to send request to AI server"}
-
