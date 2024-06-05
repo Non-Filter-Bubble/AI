@@ -31,11 +31,26 @@ SPRING_APP_URL = "http://43.203.38.124:8080"
 class GenreRequest(BaseModel):
     user_id : int
     genres : List[str]
+
+
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    logger.info(f"Request: {request.method} {request.url}")
+    response = await call_next(request)
+    logger.info(f"Response status: {response.status_code}")
+    return response
+
+
+
 @app.post("/ai/books")
 async def process_genres(request: GenreRequest):
     user_id = request.user_id
     genres = request.genres
-  
+
+    logger.info(f"Processing genres for user_id: {user_id} with genres: {genres}")
+
+    
     # AI 모델을 이용한 처리 로직 (예시)
 
     # result = process_genres_with_ai(user_id, genres)
