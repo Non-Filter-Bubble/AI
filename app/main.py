@@ -4,6 +4,7 @@ import uvicorn
 from pydantic import BaseModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
+import logging
 
 app = FastAPI()
 
