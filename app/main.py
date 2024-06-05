@@ -90,15 +90,15 @@ async def test_message(message: str):
 
 
 
-@app.get("/send-request-to-ai-server")
-async def send_request_to_ai_server():
-    # AI 서버로 GET 요청 보내기
-    ai_server_url = "http://3.37.204.233/"
-    response = requests.get(ai_server_url)
+# @app.get("/send-request-to-ai-server")
+# async def send_request_to_ai_server():
+#     # AI 서버로 GET 요청 보내기
+#     ai_server_url = "http://3.37.204.233/"
+#     response = requests.get(ai_server_url)
 
-    # 응답 확인
-    if response.status_code == 200:
-        return {"message": "Successfully sent request to AI server"}
-    else:
-        return {"message": "Failed to send request to AI server"}
+#     # 응답 확인
+#     if response.status_code == 200:
+#         return {"message": "Successfully sent request to AI server"}
+#     else:
+#         return {"message": "Failed to send request to AI server"}
 
