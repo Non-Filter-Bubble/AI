@@ -1,4 +1,14 @@
-from fastapi import FastAPI, HTTPException, Request
+
+# from fastapi import FastAPI, HTTPException
+# import requests
+# app = FastAPI()
+
+# @app.get("/")
+# async def read_root():
+#     return {"message": "Hello, World"}
+
+
+from fastapi import FastAPI, HTTPException
 import requests
 import uvicorn
 from pydantic import BaseModel
@@ -7,34 +17,22 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# CORS 설정
-origins = [
-    "http://localhost:8000",
-    "http://43.203.38.124",  #프론트엔드 주소
-    "http://43.203.38.124:8080",  # 백 서버 주소
-    "http://3.37.204.233",  # AI 서버 주소
-]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    max_age=3600,
-)
+
+
 SPRING_APP_URL = "http://43.203.38.124:8080"
 #ai server : http://43.200.64.238:8000/
 
 class GenreRequest(BaseModel):
-    user_id : int
-    genres : List[str]
+    user_id: int
+    genres: List[str]
 
 @app.post("/ai/books")
 async def process_genres(request: GenreRequest):
     user_id = request.user_id
     genres = request.genres
-  
+
     # AI 모델을 이용한 처리 로직 (예시)
+
     # result = process_genres_with_ai(user_id, genres)
     result={
         "user_id": user_id,
@@ -57,6 +55,7 @@ async def process_genres(request: GenreRequest):
                  9791127864606, 9791198084651, 9791197708572, 9788946422056, 9791167850249]
     }
     return result
+
 def process_genres_with_ai(user_id: int, genres: List[str]):
     # AI 모델 로직 예시
     # 실제로는 여기서 AI 모델을 사용하여 추천 및 기타 작업을 수행
@@ -65,9 +64,12 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
         "recommended_movie": "Inception",
         "confidence_score": 0.95
     }
+
 @app.get("/")
 async def read_root():
     return {"message": "Hello, World with FASTAPI"}
+
+
 @app.get("/test/{message}")
 async def test_message(message: str):
     return {"test ": message}
