@@ -30,8 +30,7 @@ SPRING_APP_URL = "http://43.203.38.124:8080"
 
 class GenreRequest(BaseModel):
     user_id : int
-    genres : List[str]=[]
-
+    genres : List[str]
 @app.post("/ai/books")
 async def process_genres(request: GenreRequest):
     user_id = request.user_id
