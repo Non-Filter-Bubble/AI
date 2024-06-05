@@ -1,13 +1,3 @@
-
-# from fastapi import FastAPI, HTTPException
-# import requests
-# app = FastAPI()
-
-# @app.get("/")
-# async def read_root():
-#     return {"message": "Hello, World"}
-
-
 from fastapi import FastAPI, HTTPException
 import requests
 import uvicorn
@@ -44,18 +34,9 @@ class GenreRequest(BaseModel):
 
 @app.post("/ai/books")
 async def process_genres(request: GenreRequest):
-    # 요청 데이터가 제대로 파싱되었는지 확인
-    print(f"Received user_id: {user_id}, genres: {genres}")
-
-    # 여기에 요청 처리 로직 추가
-
-    # # 처리가 완료되면 결과 반환
-    # return {
-    #     "user_id": user_id,
-    #     "genres": genres,
-    #     "status": "Processed successfully"
-    # }
-
+    user_id = request.user_id
+    genres = request.genres
+  
     # AI 모델을 이용한 처리 로직 (예시)
 
     # result = process_genres_with_ai(user_id, genres)
