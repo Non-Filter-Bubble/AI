@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 import requests
 import uvicorn
 from pydantic import BaseModel
@@ -14,7 +14,6 @@ origins = [
     "http://43.203.38.124:8080",  # 백 서버 주소
     "http://3.37.204.233",  # AI 서버 주소
 ]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -23,14 +22,13 @@ app.add_middleware(
     allow_headers=["*"],
     max_age=3600,
 )
-
 SPRING_APP_URL = "http://43.203.38.124:8080"
 #ai server : http://43.200.64.238:8000/
 
 class GenreRequest(BaseModel):
     user_id : int
     genres : List[str]
-
+    genres : List[str]=[]
 
 @app.post("/ai/books")
 async def process_genres(request: GenreRequest):
@@ -48,7 +46,6 @@ async def process_genres(request: GenreRequest):
                 [9788932909998, 9791158887605, 9791189433550, 9788994343587, 9791196205591, 9788952234247, 9788983927767, 9791196443146, 9791187589419, 9788954676465, 9791127864606, 9791198084651, 9791197708572, 9788946422056, 9791167850249]
     }
     return result
-    
 def process_genres_with_ai(user_id: int, genres: List[str]):
     # AI 모델 로직 예시
     # 실제로는 여기서 AI 모델을 사용하여 추천 및 기타 작업을 수행
@@ -57,11 +54,9 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
         "recommended_movie": "Inception",
         "confidence_score": 0.95
     }
-    
 @app.get("/")
 async def read_root():
     return {"message": "Hello, World with FASTAPI"}
-    
 @app.get("/test/{message}")
 async def test_message(message: str):
     return {"test ": message}
