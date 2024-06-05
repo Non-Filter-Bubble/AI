@@ -8,9 +8,9 @@ import logging
 
 app = FastAPI()
 
-# 로깅 설정
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# # 로깅 설정
+# logging.basicConfig(level=logging.INFO)
+# logger = logging.getLogger(__name__)
 
 
 # CORS 설정
@@ -40,12 +40,12 @@ class GenreRequest(BaseModel):
 
 
 
-@app.middleware("http")
-async def log_requests(request: Request, call_next):
-    logger.info(f"Request: {request.method} {request.url}")
-    response = await call_next(request)
-    logger.info(f"Response status: {response.status_code}")
-    return response
+# @app.middleware("http")
+# async def log_requests(request: Request, call_next):
+#     logger.info(f"Request: {request.method} {request.url}")
+#     response = await call_next(request)
+#     logger.info(f"Response status: {response.status_code}")
+#     return response
 
 
 
@@ -54,7 +54,7 @@ async def process_genres(request: GenreRequest):
     user_id = request.user_id
     genres = request.genres
 
-    logger.info(f"Processing genres for user_id: {user_id} with genres: {genres}")
+    # logger.info(f"Processing genres for user_id: {user_id} with genres: {genres}")
 
     
     # AI 모델을 이용한 처리 로직 (예시)
