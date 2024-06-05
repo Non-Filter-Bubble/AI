@@ -22,7 +22,7 @@ origins = [
     "http://localhost:8000",
     "http://43.203.38.124",  #프론트엔드 주소
     "http://43.203.38.124:8080",  # 백 서버 주소
-    "http://3.37.204.233"   # AI 서버 주소
+    "http://3.37.204.233",  # AI 서버 주소
 ]
 
 app.add_middleware(
@@ -31,7 +31,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    max_age=3600
+    max_age=3600,
 )
 
 
