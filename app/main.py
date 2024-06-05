@@ -8,14 +8,38 @@
 #     return {"message": "Hello, World"}
 
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 import requests
 import uvicorn
 from pydantic import BaseModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
+import logging
+
+
 
 app = FastAPI()
+
+# 로깅 설정
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# CORS 설정
+origins = [
+    "http://localhost:8000",
+    "http://43.203.38.124",
+    "http://43.203.38.124:8080",
+    "http://3.37.204.233",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    max_age=3600,
+)
 
 
 
@@ -26,12 +50,21 @@ class GenreRequest(BaseModel):
     user_id: int
     genres: List[str]
 
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    logger.info(f"Request: {request.method} {request.url}")
+    response = await call_next(request)
+    logger.info(f"Response status: {response.status_code}")
+    return response
+
+
 @app.post("/ai/books")
 async def process_genres(request: GenreRequest):
     user_id = request.user_id
     genres = request.genres
 
     # AI 모델을 이용한 처리 로직 (예시)
+    logger.info(f"Processing genres for user_id: {user_id} with genres: {genres}")
 
     # result = process_genres_with_ai(user_id, genres)
     result={
