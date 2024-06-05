@@ -8,38 +8,14 @@
 #     return {"message": "Hello, World"}
 
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException
 import requests
 import uvicorn
 from pydantic import BaseModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
-import logging
-
-
 
 app = FastAPI()
-
-# 로깅 설정
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# CORS 설정
-origins = [
-    "http://localhost:8000",
-    "http://43.203.38.124",
-    "http://43.203.38.124:8080",
-    "http://3.37.204.233",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    max_age=3600,
-)
 
 
 
@@ -50,48 +26,23 @@ class GenreRequest(BaseModel):
     user_id: int
     genres: List[str]
 
-@app.middleware("http")
-async def log_requests(request: Request, call_next):
-    logger.info(f"Request: {request.method} {request.url}")
-    response = await call_next(request)
-    logger.info(f"Response status: {response.status_code}")
-    return response
-
-
 @app.post("/ai/books")
 async def process_genres(request: GenreRequest):
     user_id = request.user_id
     genres = request.genres
 
     # AI 모델을 이용한 처리 로직 (예시)
-    logger.info(f"Processing genres for user_id: {user_id} with genres: {genres}")
 
-    try:
-        # result = process_genres_with_ai(user_id, genres)
-        result={
-            "user_id": user_id,
-            "isbn-nonfilter":
-                [9788932919553, 9788925569154, 9788965749257, 9791160408331, 9791158887568,
-                 9788971848722, 9791193190036, 9791158887575, 9791193024409, 9791158887582,
-                 9788950992286, 9791171251360, 9788954442145, 9791190174756, 9791191043365,
-                 9788956609959, 9788975270062, 9791158887599, 9788990982704, 9788990982575,
-                 9788965749295, 9788965749301, 9788994343990, 9788952240569, 9791168341821,
-                 9788956604992, 9788935630912, 9788971992258, 9791185851204, 9788983927620,
-                 9791164280520, 9791187498186, 9788947545419, 9788968332364, 9788932906744,
-                 9791165653330, 9791168340947, 9788990982612, 9791188862290, 9791189015381,
-                 9788930088824, 9788934985051, 9788983927644, 9788982738012, 9788983927651,
-                 9788965749219, 9788960177765, 9791191248739, 9791164052455, 9788965749240,
-                 9788968970986, 9788965749226, 9788965749233, 9788956057842, 9788983927668,
-                 9788952227829, 9791158887544, 9788983927675, 9788976041470],
-            "isbn-filter" :
-                    [9788932909998, 9791158887605, 9791189433550, 9788994343587, 9791196205591,
-                     9788952234247, 9788983927767, 9791196443146, 9791187589419, 9788954676465,
-                     9791127864606, 9791198084651, 9791197708572, 9788946422056, 9791167850249]
-        }
-        return result
-    except Exception as e:
-        logger.error(f"Error processing genres: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+    # result = process_genres_with_ai(user_id, genres)
+    result={
+        "user_id": user_id,
+        "isbn-nonfilter":
+            [9788932919553, 9788925569154, 9788965749257, 9791160408331, 9791158887568, 9788971848722, 9791193190036, 9791158887575, 9791193024409, 9791158887582, 9788950992286, 9791171251360, 9788954442145, 9791190174756, 9791191043365, 9788956609959, 9788975270062, 9791158887599, 9788990982704, 9788990982575, 9788965749295, 9788965749301, 9788994343990, 9788952240569, 9791168341821, 9788956604992, 9788935630912,
+ 9788971992258, 9791185851204, 9788983927620, 9791164280520, 9791187498186, 9788947545419, 9788968332364, 9788932906744, 9791165653330, 9791168340947, 9788990982612, 9791188862290, 9791189015381, 9788930088824, 9788934985051, 9788983927644, 9788982738012, 9788983927651, 9788965749219, 9788960177765, 9791191248739, 9791164052455, 9788965749240, 9788968970986, 9788965749226, 9788965749233, 9788956057842, 9788983927668, 9788952227829, 9791158887544, 9788983927675, 9788976041470],
+        "isbn-filter" :
+                [9788932909998, 9791158887605, 9791189433550, 9788994343587, 9791196205591, 9788952234247, 9788983927767, 9791196443146, 9791187589419, 9788954676465, 9791127864606, 9791198084651, 9791197708572, 9788946422056, 9791167850249]
+    }
+    return result
 
 def process_genres_with_ai(user_id: int, genres: List[str]):
     # AI 모델 로직 예시
