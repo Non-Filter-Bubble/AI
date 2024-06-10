@@ -2,8 +2,14 @@ import random
 import re
 import pandas as pd
 import numpy as np
+from functools import reduce
+
+# import pickle
+# with open('embedder.pickle', 'rb') as f:
+#     embedder = pickle.load(f)
 
 df=pd.read_csv('last_book.csv',index_col=False)
+
 
 def remove_special_characters_and_make_list(input_string):
     # 특수문자 제거
@@ -229,7 +235,6 @@ time_list=" ".join(all[23]+time_management_keywords)
 relation_list=" ".join(all[25]+interpersonal_relationships_keywords)
 
 
-
 romance_sim=pd.concat([df_horror,df_mystery,df_sf,df_fantasy,df_diary,df_trip,df_human,df_medit])
 human_sim=pd.concat([df_romance,df_love,df_success,df_abil,df_phsyco,df_iron,df_inmun])
 sf_sim=pd.concat([df_horror,df_mystery,df_romance,df_love,df_history])
@@ -244,6 +249,22 @@ poem_sim=pd.concat([df_romance,df_love,df_human,df_diary,df_medit,df_trip,df_suc
 speak_sim=pd.concat([df_relation,df_time,df_success,df_abil])
 time_sim=pd.concat([df_speak,df_economy,df_manage,df_success,df_abil])
 relation_sim=pd.concat([df_speak,df_success,df_abil,df_phsyco,df_iron,df_inmun])
+
+filter_romance_df = pd.concat([df_romance, df_love])
+filter_humanism_df = pd.concat([df_human, df_medit, df_diary, df_trip])
+filter_sf_df = pd.concat([df_sf, df_fantasy])
+filter_horror_df = pd.concat([df_horror, df_mystery])
+filter_math_physics_df = pd.concat([df_physics, df_star, df_earth, df_math])
+filter_chemistry_df = pd.concat([df_biology, df_chemi])
+filter_success_df = pd.concat([df_success, df_abil])
+filter_economy_df = pd.concat([df_economy, df_manage])
+filter_psychology_df = pd.concat([df_phsyco, df_iron, df_inmun])
+filter_history_df = df_history
+filter_korean_poem_df = df_korPoem
+filter_nego_df = df_speak
+filter_time_df = df_time
+filter_relation_df = df_relation
+
 
 romance_sim_slice=romance_sim[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
 human_sim_slice=human_sim[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
@@ -260,10 +281,25 @@ speak_sim_slice=speak_sim[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
 time_sim_slice=time_sim[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
 relation_sim_slice=relation_sim[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
 
+filter_romance_sim_slice = filter_romance_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+filter_human_sim_slice = filter_humanism_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+filter_sf_sim_slice = filter_sf_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+filter_horror_sim_slice = filter_horror_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+filter_physics_sim_slice = filter_math_physics_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+filter_bio_sim_slice = filter_chemistry_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+filter_success_sim_slice = filter_success_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+filter_economy_sim_slice = filter_economy_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+filter_phsyco_sim_slice = filter_psychology_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+filter_history_sim_slice = filter_history_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+filter_poem_sim_slice = filter_korean_poem_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+filter_speak_sim_slice = filter_nego_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+filter_time_sim_slice = filter_time_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+filter_relation_sim_slice = filter_relation_df[['ISBN_THIRTEEN_NO','GENRE_LV2','KEYWORD_oneline']]
+
 
 from sentence_transformers import SentenceTransformer, models,util
 
-#embedder = SentenceTransformer("jhgan/ko-sroberta-multitask")
+embedder = SentenceTransformer("jhgan/ko-sroberta-multitask")
 
 
 slice_df_cluster = {
@@ -281,6 +317,23 @@ slice_df_cluster = {
     "speak": speak_sim_slice,
     "time": time_sim_slice,
     "relation": relation_sim_slice
+}
+
+filter_slice_df_cluster = {
+    "romance": filter_romance_sim_slice,
+    "human": filter_human_sim_slice,
+    "sf": filter_sf_sim_slice,
+    "horror": filter_horror_sim_slice,
+    "physics": filter_physics_sim_slice,
+    "bio": filter_bio_sim_slice,
+    "success": filter_success_sim_slice,
+    "economy": filter_economy_sim_slice,
+    "psycho": filter_phsyco_sim_slice,
+    "history": filter_history_sim_slice,
+    "poem": filter_poem_sim_slice,
+    "speak": filter_speak_sim_slice,
+    "time": filter_time_sim_slice,
+    "relation": filter_relation_sim_slice
 }
 
 all_keywords_list = {
@@ -336,6 +389,21 @@ def get_slices_and_keywords_by_genres(genres):
     return selected_slices, selected_keywords
 
 
+def get_filter_slices_and_keywords_by_genres(genres):
+    """
+    입력된 장르 리스트를 기반으로 해당하는 슬라이스와 키워드 리스트를 반환합니다.
+    """
+    selected_slices = []
+    selected_keywords = []
+    for genre in genres:
+        if genre in filter_slice_df_cluster:
+            selected_slices.append(filter_slice_df_cluster[genre])
+            selected_keywords.append(all_keywords_list[genre])
+        else:
+            print(f"Warning: Genre '{genre}' not recognized.")
+    return selected_slices, selected_keywords
+
+
 def find_similar_books(embedder, selected_slices, selected_keywords, top_k=25):
     """
     각 슬라이스에 대해 유사한 책을 찾고 ISBN 리스트를 반환합니다.
@@ -372,8 +440,6 @@ def main(genre_list):
     genre_list=genre_list
     input_genres = genre_list  # 사용자로부터 입력받은 장르 리스트
 
-
-    embedder = load_model()
     selected_slices, selected_keywords = get_slices_and_keywords_by_genres(input_genres)
 
     #non-filter book
