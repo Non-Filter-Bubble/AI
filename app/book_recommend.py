@@ -298,9 +298,12 @@ filter_relation_sim_slice = filter_relation_df[['ISBN_THIRTEEN_NO','GENRE_LV2','
 
 
 from sentence_transformers import SentenceTransformer, models,util
+import pickle
 
-embedder = SentenceTransformer("jhgan/ko-sroberta-multitask")
+pickle_file_path = "embedder2.pickle"
 
+with open(pickle_file_path, 'rb') as file:
+    embedder = pickle.load(file)
 
 slice_df_cluster = {
     "romance": romance_sim_slice,
@@ -452,5 +455,4 @@ def main(genre_list):
 
 
 if __name__ == "__main__":
-    genre_list = ['romance','sf','history']
-    main(genre_list)
+    main()
