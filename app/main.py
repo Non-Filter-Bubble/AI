@@ -35,6 +35,7 @@ async def process_genres(request: GenreRequest):
     # AI 모델을 이용한 처리 로직 (예시)
 
     result = process_genres_with_ai(user_id, genres)
+    print(result)
 #     result={
 #         "user_id": user_id,
 #         "isbn-nonfilter":
@@ -44,6 +45,21 @@ async def process_genres(request: GenreRequest):
 #                 [9788932909998, 9791158887605, 9791189433550, 9788994343587, 9791196205591, 9788952234247, 9788983927767, 9791196443146, 9791187589419, 9788954676465, 9791127864606, 9791198084651, 9791197708572, 9788946422056, 9791167850249]
 #     }
     return result
+
+from typing import List, Union, Dict, Any
+from itertools import chain
+
+
+def convert_to_python_type(value: Union[np.int64, int, float, str, bool]) -> Union[int, float, str, bool]:
+    if isinstance(value, np.generic):
+        return value.item()
+    return value
+
+# 리스트 평탄화 및 numpy 타입 변환
+def flatten_and_convert(sim_book: List[List[Any]]) -> List[Any]:
+    flattened_list = list(chain.from_iterable(sim_book))
+    converted_list = [convert_to_python_type(item) for item in flattened_list]
+    return converted_list
 
 def process_genres_with_ai(user_id: int, genres: List[str]):
     # AI 모델 로직 예시
@@ -61,13 +77,19 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
     selected_slices, selected_keywords = get_slices_and_keywords_by_genres(genres)
     sim_book = find_similar_books(embedder, selected_slices, selected_keywords)
 
-    sim_book_list = list(reduce(lambda x, y: x+y, sim_book))
+    #sim_book_list = list(reduce(lambda x, y: x+y, sim_book))
+    sim_book_list = flatten_and_convert(sim_book)
+    print(sim_book_list)
 
     # filter : 같은 장르 내에서 유사 아이템
     filter_selected_slices, filter_selected_keywords = get_filter_slices_and_keywords_by_genres(genres)
-    filter_sim_book = find_similar_books(embedder, selected_slices, selected_keywords)
+    filter_sim_book = find_similar_books(embedder, filter_selected_slices, filter_selected_keywords)
 
-    filter_sim_book_list = list(reduce(lambda x, y: x+y, filter_sim_book))
+
+    #filter_sim_book_list = list(reduce(lambda x, y: x+y, filter_
+    #sim_book
+    filter_sim_book_list = flatten_and_convert(filter_sim_book)
+    print(filter_sim_book_list)
 
     return {
         "user_id": user_id,
