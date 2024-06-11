@@ -4,4 +4,3 @@
 fastapi
 uvicorn[standard]
 pandas
-sentence-transformers
