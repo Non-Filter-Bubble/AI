@@ -21,7 +21,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 RUN pip install pandas
-
+RUN pip install sentence-transformers
 
 # 애플리케이션 코드를 작업 디렉토리로 복사
 COPY . .
