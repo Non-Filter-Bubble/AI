@@ -381,6 +381,7 @@ def get_slices_and_keywords_by_genres(genres):
     """
     입력된 장르 리스트를 기반으로 해당하는 슬라이스와 키워드 리스트를 반환합니다.
     """
+    print("get_slices_and_keywords_by_genres")
     selected_slices = []
     selected_keywords = []
     for genre in genres:
