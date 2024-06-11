@@ -32,16 +32,16 @@ jobs:
       - name: Build and push Docker image for FastAPI
         run: |
           # Build Docker image
-          docker build -t my-ai-app .
+          docker build -t my-ai-app3 .
       
           # Tag Docker image
-          docker tag my-ai-app ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
+          docker tag my-ai-app3 ${{ secrets.DOCKER_USERNAME }}/my-ai-app3:latest
       
           # Login to Docker Hub
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       
           # Push Docker image to Docker Hub
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/my-ai-app3:latest
         
       - name: Deploy to AWS EC2
         uses: appleboy/ssh-action@master
@@ -50,9 +50,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
-          
-            sudo docker stop my-ai-app || true
-            sudo docker rm my-ai-app || true
-            sleep 10
-            sudo docker run -d --name my-ai-app -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/my-ai-app:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-ai-app3:latest
+            sudo docker stop my-ai-app3 || true
+            sudo docker rm my-ai-app3 || true
+            sudo docker run -d --name my-ai-app3 -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/my-ai-app3:latest
