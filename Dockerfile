@@ -1,37 +1,33 @@
-# Use an official Python runtime as a parent image
+# 이미지 기반으로는 Python을 사용
 FROM python:3.9-slim AS base
 
-# Set environment variables
+# 환경 변수 설정
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Install system dependencies
+# 시스템 종속성 설치
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         gcc \
-        # nginx \
     && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory in the container
+# 컨테이너 내에서 작업 디렉토리 설정
 WORKDIR /app
 
-# Copy the dependencies file to the working directory
+# 의존성 파일을 작업 디렉토리에 복사
 COPY requirements.txt .
 
-# Install any needed packages specified in requirements.txt
+# requirements.txt에 명시된 필요한 패키지 설치
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install requests module
-RUN pip install requests
+# book_recommend.py 파일을 작업 디렉토리로 복사
+COPY book_recommend.py .
 
-# Copy the application code to the working directory
+# 애플리케이션 코드를 작업 디렉토리로 복사
 COPY . .
 
-# Copy nginx.conf to the container
-# COPY nginx.conf /etc/nginx/nginx.conf
-
-# Expose port 8000 to the outside world
+# 외부로 포트 8000을 노출
 EXPOSE 8000
 
-# Run the FastAPI application
+# FastAPI 애플리케이션 실행
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
