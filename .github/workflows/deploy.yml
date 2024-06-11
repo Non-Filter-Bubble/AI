@@ -50,12 +50,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-ai-app3:latest
-            # sudo docker stop my-ai-app3 || true
-            # sudo docker rm my-ai-app3 || true
-            # sudo docker run -d -p 8000:8000 --name my-ai-app3 --restart always ${{ secrets.DOCKER_USERNAME }}/my-ai-app3:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-ai-app3:latest
             sudo docker stop my-ai-app3 || true
             sudo docker rm my-ai-app3 || true
-            sudo docker run -d --name my-ai-app3 -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/my-ai-app3:latest
-
+            sudo docker run -d -p 8000:8000 --name my-ai-app3 --restart always ${{ secrets.DOCKER_USERNAME }}/my-ai-app3:latest
