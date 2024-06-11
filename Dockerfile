@@ -24,7 +24,7 @@ RUN pip install pandas
 
 
 # 애플리케이션 코드를 작업 디렉토리로 복사
-COPY . .
+COPY /app .
 
 # 외부로 포트 8000을 노출
 EXPOSE 8000
