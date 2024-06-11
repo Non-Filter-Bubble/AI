@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         gcc \
-        nginx \
+        # nginx \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory in the container
@@ -28,7 +28,7 @@ RUN pip install requests
 COPY . .
 
 # Copy nginx.conf to the container
-COPY nginx.conf /etc/nginx/nginx.conf
+# COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose port 8000 to the outside world
 EXPOSE 8000
