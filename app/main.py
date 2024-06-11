@@ -8,7 +8,8 @@
 #     return {"message": "Hello, World"}
 
 
-from book_recommend import *
+# from book_recommend import *
+from .book_recommend import *
 from fastapi import FastAPI, HTTPException
 import requests
 import uvicorn
