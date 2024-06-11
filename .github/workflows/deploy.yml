@@ -53,4 +53,5 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-ai-app4:latest
             sudo docker stop my-ai-app4 || true
             sudo docker rm my-ai-app4 || true
-            sudo docker run -d -p 8000:8000 --name my-ai-app4 --restart always ${{ secrets.DOCKER_USERNAME }}/my-ai-app4:latest
+            # sudo docker run -d -p 8000:8000 --name my-ai-app4 --restart always ${{ secrets.DOCKER_USERNAME }}/my-ai-app4:latest
+            sudo docker run -d -p 8000:8000 --name my-ai-app4 ${{ secrets.DOCKER_USERNAME }}/my-ai-app4:latest
