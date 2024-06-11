@@ -32,7 +32,7 @@ jobs:
       - name: Build and push Docker image for FastAPI
         run: |
           # Build Docker image
-          docker build -t my-ai-app4
+          docker build -t my-ai-app4 .
       
           # Tag Docker image
           docker tag my-ai-app4 ${{ secrets.DOCKER_USERNAME }}/my-ai-app4:latest
