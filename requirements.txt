@@ -3,3 +3,5 @@
 
 fastapi
 uvicorn[standard]
+pandas
+sentence-transformers==2.0.0
