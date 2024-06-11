@@ -20,9 +20,6 @@ COPY requirements.txt .
 # requirements.txt에 명시된 필요한 패키지 설치
 RUN pip install --no-cache-dir -r requirements.txt
 
-# book_recommend.py 파일을 작업 디렉토리로 복사
-COPY book_recommend.py .
-
 # 애플리케이션 코드를 작업 디렉토리로 복사
 COPY . .
 
