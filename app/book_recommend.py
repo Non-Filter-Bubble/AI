@@ -8,7 +8,7 @@ from functools import reduce
 # with open('embedder.pickle', 'rb') as f:
 #     embedder = pickle.load(f)
 
-file_path = '.last_book.csv'
+file_path = 'last_book.csv'
 df=pd.read_csv(file_path,index_col=False)
 
 
