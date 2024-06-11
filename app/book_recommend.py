@@ -8,7 +8,7 @@ from functools import reduce
 # with open('embedder.pickle', 'rb') as f:
 #     embedder = pickle.load(f)
 
-df=pd.read_csv('.last_book.csv',index_col=False)
+df=pd.read_csv('last_book.csv',index_col=False)
 
 
 def remove_special_characters_and_make_list(input_string):
