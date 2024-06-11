@@ -96,7 +96,6 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
 
     #sim_book_list = list(reduce(lambda x, y: x+y, sim_book))
     sim_book_list = flatten_and_convert(sim_book)
-    print(sim_book_list)
 
     # filter : 같은 장르 내에서 유사 아이템
     filter_selected_slices, filter_selected_keywords = get_filter_slices_and_keywords_by_genres(genres)
@@ -106,7 +105,6 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
     #filter_sim_book_list = list(reduce(lambda x, y: x+y, filter_
     #sim_book
     filter_sim_book_list = flatten_and_convert(filter_sim_book)
-    print(filter_sim_book_list)
 
     return {
         "user_id": user_id,

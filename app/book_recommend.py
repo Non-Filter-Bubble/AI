@@ -381,7 +381,7 @@ def get_slices_and_keywords_by_genres(genres):
     """
     입력된 장르 리스트를 기반으로 해당하는 슬라이스와 키워드 리스트를 반환합니다.
     """
-    print("get_slices_and_keywords_by_genres")
+    print("Activate get_slices_and_keywords_by_genres")
     selected_slices = []
     selected_keywords = []
     for genre in genres:
@@ -397,6 +397,7 @@ def get_filter_slices_and_keywords_by_genres(genres):
     """
     입력된 장르 리스트를 기반으로 해당하는 슬라이스와 키워드 리스트를 반환합니다.
     """
+    print("Activate get_filter_slices_and_keywords_by_genres")
     selected_slices = []
     selected_keywords = []
     for genre in genres:
@@ -412,6 +413,7 @@ def find_similar_books(embedder, selected_slices, selected_keywords, top_k=25):
     """
     각 슬라이스에 대해 유사한 책을 찾고 ISBN 리스트를 반환합니다.
     """
+    print("Activate find_similar_books")
     sim_book = []
     for i in range(len(selected_slices)):
         tmp = selected_slices[i].reset_index()
