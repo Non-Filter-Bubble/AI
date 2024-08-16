@@ -73,8 +73,8 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
     set_genres = set(genres)   # set으로 변환
     list_genres = list(set_genres) # list로 변환
 
-    gen=['로맨스','일반소설','자전']
-    #gen=list_genres
+    #gen=['로맨스','일반소설','자전']
+    gen=list_genres
 
     gcn_book_list,filter_sim_book,sim_book=run_recommendation_system(gen)
 
