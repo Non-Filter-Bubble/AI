@@ -104,8 +104,8 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
 
     return {
         "user_id": user_id,
-        "isbn_nonfilter": sim_book_list,
-        "isbn_filter": filter_sim_book_list,
+        "isbn_nonfilter": sim_book,
+        "isbn_filter": filter_sim_book,
     }
 
 @app.get("/")
