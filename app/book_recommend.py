@@ -584,10 +584,10 @@ def run_recommendation_system(gen):
 
     nonfilter_isbn_list=get_top_k_recommendations(select,genre_embedding_corpus, book_embedding_corpus,df_genre, df_book, top_k=100)
 
-    print("GCN : " ,gcn_book_list)
-
-    print("FILTER : " ,filter_isbn_list)
-    print("NONFILTER : " ,nonfilter_isbn_list)
+    # print("GCN : " ,gcn_book_list)
+    #
+    # print("FILTER : " ,filter_isbn_list)
+    # print("NONFILTER : " ,nonfilter_isbn_list)
 
     return gcn_book_list,filter_isbn_list,nonfilter_isbn_list
 
@@ -602,5 +602,5 @@ def GCN_book(user_id,book_list):
     return nonfilter_book
 
 
-gen=['로맨스','일반소설','자전']
-run_recommendation_system(gen)
+# gen=['로맨스','일반소설','자전']
+# run_recommendation_system(gen)
