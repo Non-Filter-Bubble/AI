@@ -78,10 +78,10 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
 
     gcn_book_list,filter_sim_book,sim_book=run_recommendation_system(gen)
 
-    # GCN 추천 시스템에 넣을 책 리스트
+    # GCN 추천 시스템에 넣을 책 리스트 나중에 주석 풀고 다시 해주세요
     print(gcn_book_list)
-    nonfilter_book=GCN_book(user_id,gcn_book_list)
-    nonfilter_book_list=flatten_and_convert(nonfilter_book)
+    #nonfilter_book=GCN_book(user_id,gcn_book_list)
+    #nonfilter_book_list=flatten_and_convert(nonfilter_book)
 
 
     # # nonfilter
