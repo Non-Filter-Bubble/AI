@@ -468,10 +468,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 # Data loading
 def load_data():
     df_book = pd.read_pickle('book_embedding_yes.pkl')
+    df_recom=pd.read_pickle('for_recommend_df.pkl')
     #df_book = pd.read_pickle('book_embedding.pkl')
     df_genre = pd.read_pickle('genre_embedding.pkl')
     df_book = df_book.reset_index()
-    return df_book, df_genre
+    return df_book,df_recom, df_genre
 
 # Genre selection based on user preference
 def get_favor_genre(gen, genre_match_dict, genre_dict):
@@ -483,12 +484,13 @@ def get_favor_genre(gen, genre_match_dict, genre_dict):
 
 
 # Filter data based on preferred genre
-def filter_by_favor_genre(df_book, favor_genre):
+def filter_by_favor_genre(df_book, df_recom, favor_genre):
     filter_df = pd.DataFrame()
     gcn_book=pd.DataFrame()
     for genre in favor_genre:
         tmp = df_book[df_book['GENRE_LV2'] == genre].sample(20)
-        tmp_gcn = df_book[df_book['GENRE_LV2'] == genre].sample(3)
+        tmp_gcn = df_recom[df_recom['GENRE_LV2'] == genre].sample(3,replace=True)
+
         filter_df = pd.concat([filter_df, tmp])
         gcn_book = pd.concat([gcn_book, tmp_gcn])
 
@@ -517,6 +519,15 @@ def filter_by_similar_genre(df_book, similar_genre):
         slice_df = pd.concat([slice_df, tmp])
     return slice_df
 
+# Filter data based on similar genres
+def gcn_list_filter_with_favor_genre(df_book, gcn_nonfilter_list,favor_genre):
+    temp=df_book[df_book['ISBN_THIRTEEN_NO'].isin(gcn_nonfilter_list)]
+    df_nonfiltered=temp[~temp['GENRE_LV2'].isin(favor_genre)]
+    df_filtered = temp[temp['GENRE_LV2'].isin(favor_genre)]
+    gcn_filtered_list=df_filtered['ISBN_THIRTEEN_NO'].tolist()
+    gcn_nonfiltered_list = df_nonfiltered['ISBN_THIRTEEN_NO'].tolist()
+    return gcn_filtered_list,gcn_nonfiltered_list
+
 # Calculate cosine similarity and retrieve top-k results
 def get_top_k_recommendations(select, genre_embedding_corpus, book_embedding_corpus, df_genre, df_book, top_k=100):
     results = []
@@ -535,10 +546,10 @@ def get_top_k_recommendations(select, genre_embedding_corpus, book_embedding_cor
     return [item for sublist in results for item in sublist]
 
 # Main function to run the recommendation system
-def run_recommendation_system(gen):
+def run_recommendation_system(gen,user_id):
     # Load data
-    df_book, df_genre = load_data()
-
+    df_book,df_recom, df_genre = load_data()
+    user_id=user_id
     # Genre mapping dictionaries
     genre_match_dict = {
         "로맨스": 1, "자전": 2, "일반소설": 3, "판타지": 4, "공포/스릴러": 5, "자연과학": 6,
@@ -570,11 +581,16 @@ def run_recommendation_system(gen):
         14: ['심리학', '철학', '인문교양', '사회', '화술/협상', '시간관리', '경제', '경영', '인물/자전적', '명상/치유', '일기/편지', '여행', '교양에세이'],
         15: ['시간관리', '인간관계', '화술/협상', '역사', 'sf/과학', '판타지']
     }
+    #선호 장르 뽑기
     select, favor_genre = get_favor_genre(gen, genre_match_dict, genre_dict)
-    filter_isbn_list,gcn_book_list= filter_by_favor_genre(df_book, favor_genre)
 
+    #선호 장르 기반 도서 추천 리스트 추출 및 GCN 책 리스트 추출
+    filter_isbn_list,gcn_book_list= filter_by_favor_genre(df_book, df_recom, favor_genre)
+
+    #Nonfilter with embedding
     similar_genre=get_similar_genre(select,genre_sim_dict,favor_genre)
     slice_df=filter_by_similar_genre(df_book,similar_genre)
+
 
     book_embedding = slice_df['embedding2'].tolist()
     book_embedding_corpus = torch.tensor(book_embedding)
@@ -589,17 +605,9 @@ def run_recommendation_system(gen):
     # print("FILTER : " ,filter_isbn_list)
     # print("NONFILTER : " ,nonfilter_isbn_list)
 
-    return gcn_book_list,filter_isbn_list,nonfilter_isbn_list
-
-def GCN_book(user_id,book_list):
-    user_id=user_id
-    book_list=book_list
+    return gcn_book_list,filter_isbn_list,nonfilter_isbn_list,favor_genre,df_book
 
 
-
-
-    nonfilter_book=book_list
-    return nonfilter_book
 
 
 # gen=['로맨스','일반소설','자전']
