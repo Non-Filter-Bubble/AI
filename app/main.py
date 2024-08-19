@@ -15,6 +15,7 @@ import uvicorn
 from pydantic import BaseModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
+from GCN import *
 
 app = FastAPI()
 
@@ -69,43 +70,36 @@ def flatten_and_convert(sim_book: List[List[Any]]) -> List[Any]:
     return converted_list
 
 def process_genres_with_ai(user_id: int, genres: List[str]):
+    user_id=user_id
 
     set_genres = set(genres)   # set으로 변환
     list_genres = list(set_genres) # list로 변환
 
-    #gen=['로맨스','일반소설','자전']
     gen=list_genres
 
-    gcn_book_list,filter_sim_book,sim_book=run_recommendation_system(gen)
+    gcn_book_list,filter_sim_book,sim_book,favor_genre,df_book=run_recommendation_system(gen,user_id)
 
     # GCN 추천 시스템에 넣을 책 리스트 나중에 주석 풀고 다시 해주세요
-    print(gcn_book_list)
-    #nonfilter_book=GCN_book(user_id,gcn_book_list)
-    #nonfilter_book_list=flatten_and_convert(nonfilter_book)
+    print("books for gcn recommend system : ",gcn_book_list)
+    filter_book0, filter_book=run_GCN(str(user_id),gcn_book_list)
+    filter_book = list(map(str, filter_book))
+
+    gcn_filtered_list,gcn_non_filtered_list=gcn_list_filter_with_favor_genre(df_book, filter_book, favor_genre)
+
+    books_for_new=list(set(sim_book+gcn_non_filtered_list))
+    books_for_new = random.sample(books_for_new,100)
+    books_for_you = list(set(filter_sim_book + gcn_filtered_list))
+    books_for_you = random.sample(books_for_you, 70)
+
+    print("books from gcn filter recommend system : ",books_for_you)
+    print("books for gcn nonfilter system : ",books_for_new)
 
 
-    # # nonfilter
-    # selected_slices, selected_keywords = get_slices_and_keywords_by_genres(genres)
-    # sim_book = find_similar_books(embedder, selected_slices, selected_keywords)
-    #sim_book_list = list(reduce(lambda x, y: x+y, sim_book))
-    sim_book_list = flatten_and_convert(sim_book)
-    print(sim_book)
-    #print(sim_book_list)
-
-    # # filter : 같은 장르 내에서 유사 아이템
-    # filter_selected_slices, filter_selected_keywords = get_filter_slices_and_keywords_by_genres(genres)
-    # filter_sim_book = find_similar_books(embedder, filter_selected_slices, filter_selected_keywords)
-
-
-    #filter_sim_book_list = list(reduce(lambda x, y: x+y, filter_
-    filter_sim_book_list = flatten_and_convert(filter_sim_book)
-    print(filter_sim_book)
-    #print(filter_sim_book_list)
 
     return {
         "user_id": user_id,
-        "isbn_nonfilter": sim_book,
-        "isbn_filter": filter_sim_book,
+        "isbn_nonfilter": books_for_new,
+        "isbn_filter": books_for_you,
     }
 
 @app.get("/")
