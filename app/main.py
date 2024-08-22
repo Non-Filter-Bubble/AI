@@ -114,4 +114,3 @@ async def test_message(message: str):
     return {"test ": message}
 
 
-process_genres_with_ai(123123,['로맨스','일반소설','자전'])
