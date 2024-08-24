@@ -8,7 +8,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 # Data loading
 def load_data():
-    df_book = pd.read_pickle('book_embedding_yes.pkl')
+    #df_book = pd.read_pickle('book_embedding_yes.pkl')
+    df_book = pd.read_pickle('book_embedding_yes_temp.pkl')
     df_recom=pd.read_pickle('for_recommend_df.pkl')
     #df_book = pd.read_pickle('book_embedding.pkl')
     df_genre = pd.read_pickle('genre_embedding.pkl')
@@ -132,15 +133,15 @@ def run_recommendation_system(gen,user_id):
     similar_genre=get_similar_genre(select,genre_sim_dict,favor_genre)
     slice_df=filter_by_similar_genre(df_book,similar_genre)
 
-
-    book_embedding = slice_df['embedding2'].tolist()
-    book_embedding_corpus = torch.tensor(book_embedding)
+    # book_embedding = slice_df['embedding2'].tolist()
+    # book_embedding_corpus = torch.tensor(book_embedding)
 
 
     genre_embedding = df_genre['embedding2'].tolist()
     genre_embedding_corpus = torch.tensor(genre_embedding)
 
-    nonfilter_isbn_list=get_top_k_recommendations(select,genre_embedding_corpus, book_embedding_corpus,df_genre, df_book, top_k=100)
+    #nonfilter_isbn_list=get_top_k_recommendations(select,genre_embedding_corpus, book_embedding_corpus,df_genre, df_book, top_k=100)
+    nonfilter_isbn_list=[]
 
     # print("GCN : " ,gcn_book_list)
     #
