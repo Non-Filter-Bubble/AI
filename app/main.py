@@ -79,8 +79,12 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
 
     gcn_filtered_list,gcn_non_filtered_list=gcn_list_filter_with_favor_genre(df_book, filter_book, favor_genre)
 
-    books_for_new=list(set(sim_book+gcn_non_filtered_list))
-    books_for_new = random.sample(books_for_new,100)
+    # books_for_new=list(set(sim_book+gcn_non_filtered_list))
+    # books_for_new = random.sample(books_for_new,100)
+    # books_for_you = list(set(filter_sim_book + gcn_filtered_list))
+    # books_for_you = random.sample(books_for_you, 70)
+
+    books_for_new=gcn_non_filtered_list
     books_for_you = list(set(filter_sim_book + gcn_filtered_list))
     books_for_you = random.sample(books_for_you, 70)
 
