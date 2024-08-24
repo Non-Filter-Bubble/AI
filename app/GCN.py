@@ -348,7 +348,8 @@ def run_GCN(user_id,book_list):
     book_list=book_list
 
     train,test,user_label_encoder,item_label_encoder,n_users,n_items=prepare_dataset()
-    adj_mat = pickle.load(open("adj_mat.pkl", 'rb'))
+    #adj_mat = pickle.load(open("adj_mat.pkl", 'rb'))
+    adj_mat = pd.read_pickle("adj_mat.pkl")
     adj_mat_after=new_adj_mat(user_label_encoder, item_label_encoder, n_users, n_items, user_id, book_list, adj_mat,train)
     adj_mat=adj_mat_after
 
