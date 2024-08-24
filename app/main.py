@@ -1,12 +1,4 @@
 
-# from fastapi import FastAPI, HTTPException
-# import requests
-# app = FastAPI()
-
-# @app.get("/")
-# async def read_root():
-#     return {"message": "Hello, World"}
-
 
 
 from book_recommend import *
