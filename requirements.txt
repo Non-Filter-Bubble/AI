@@ -4,3 +4,7 @@
 fastapi
 uvicorn[standard]
 pandas
+python-box
+tqdm
+requests
+scikit-learn
