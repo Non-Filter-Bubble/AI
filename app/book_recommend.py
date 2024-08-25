@@ -29,8 +29,9 @@ def get_favor_genre(gen, genre_match_dict, genre_dict):
 def filter_by_favor_genre(df_book, df_recom, favor_genre):
     filter_df = pd.DataFrame()
     gcn_book=pd.DataFrame()
+    no_list=['sf/과학','한국시','생물학','화학','천문']
     for genre in favor_genre:
-        if genre=='sf/과학':
+        if genre in no_list:
             continue
         tmp = df_book[df_book['GENRE_LV2'] == genre].sample(20)
         tmp_gcn = df_recom[df_recom['GENRE_LV2'] == genre].sample(3,replace=True)
@@ -102,7 +103,7 @@ def run_recommendation_system(gen,user_id):
 
     genre_dict = {
         1: ['로맨스', '사랑/연애'], 2: ['인물/자전적', '명상/치유', '일기/편지', '여행', '교양에세이'],
-        3: ['일반소설'], 4: ['sf/과학', '판타지'], 5: ['공포/호러', '미스터리/스릴러'], 6: ['물리학', '천문', '지구과학', '수학'],
+        3: ['일반소설'], 4: ['sf/과학', '판타지'], 5: ['공포/호러', '미스터리/스릴러'], 6: ['물리학', '천문','천문학','지구과학', '수학'],
         7: ['생물학', '화학'], 8: ['성공/처세', '자기능력계발'], 9: ['심리학', '철학', '인문교양', '사회'], 10: ['역사'],
         11: ['한국시', '일반시'], 12: ['화술/협상'], 13: ['시간관리'], 14: ['인간관계'], 15: ['경제', '경영']
     }
