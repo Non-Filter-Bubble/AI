@@ -30,6 +30,8 @@ def filter_by_favor_genre(df_book, df_recom, favor_genre):
     filter_df = pd.DataFrame()
     gcn_book=pd.DataFrame()
     for genre in favor_genre:
+        if genre=='sf/과학':
+            continue
         tmp = df_book[df_book['GENRE_LV2'] == genre].sample(20)
         tmp_gcn = df_recom[df_recom['GENRE_LV2'] == genre].sample(3,replace=True)
 
@@ -122,8 +124,10 @@ def run_recommendation_system(gen,user_id):
         14: ['심리학', '철학', '인문교양', '사회', '화술/협상', '시간관리', '경제', '경영', '인물/자전적', '명상/치유', '일기/편지', '여행', '교양에세이'],
         15: ['시간관리', '인간관계', '화술/협상', '역사', 'sf/과학', '판타지']
     }
+    print("넘어온 장르 : ",gen)
     #선호 장르 뽑기
     select, favor_genre = get_favor_genre(gen, genre_match_dict, genre_dict)
+    print(select,favor_genre)
 
     #선호 장르 기반 도서 추천 리스트 추출 및 GCN 책 리스트 추출
     filter_isbn_list,gcn_book_list= filter_by_favor_genre(df_book, df_recom, favor_genre)

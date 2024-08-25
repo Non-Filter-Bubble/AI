@@ -41,7 +41,7 @@ async def process_genres(request: GenreRequest):
     # AI 모델을 이용한 처리 로직 (예시)
 
     result = process_genres_with_ai(user_id, genres)
-    print(result)
+    #print(result)
     return result
 
 from typing import List, Union, Dict, Any
@@ -71,7 +71,6 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
     gcn_book_list,filter_sim_book,sim_book,favor_genre,df_book=run_recommendation_system(gen,user_id)
 
     # GCN 추천 시스템에 넣을 책 리스트 나중에 주석 풀고 다시 해주세요
-    print("books for gcn recommend system : ",gcn_book_list)
     filter_book0, filter_book=run_GCN(str(user_id),gcn_book_list)
     filter_book = list(map(str, filter_book))
 
@@ -86,8 +85,8 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
     books_for_you = list(set(filter_sim_book + gcn_filtered_list))
     books_for_you = random.sample(books_for_you, 70)
 
-    print("books from gcn filter recommend system : ",books_for_you)
-    print("books for gcn nonfilter system : ",books_for_new)
+    books_for_new = [isbn for isbn in books_for_new if len(isbn) == 13]
+    books_for_you = [isbn for isbn in books_for_you if len(isbn) == 13]
 
 
 

@@ -314,7 +314,7 @@ def train_model(lightGCN,train, test, n_users, n_items,epochs, batch_size, lr,to
 
         if (epoch == 0):
             topk_epoch_10 = topk_df
-        if (epoch == 1):
+        if (epoch == 0):
             topk_epoch_20 = topk_df
 
     return topk_epoch_10, topk_epoch_20
@@ -339,7 +339,7 @@ def run_GCN(user_id,book_list):
         'top_k': 100,
         'n_layers': 3,
         'reg': 1e-4,
-        'epochs': 2
+        'epochs': 1
     }
     config = Box(config)
 
