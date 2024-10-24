@@ -2,19 +2,16 @@
 
 import pandas as pd
 import numpy as np
-import time
+
 import torch
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Data loading
 def load_data():
-    #df_book = pd.read_pickle('book_embedding_yes.pkl')
     df_book = pd.read_pickle('book_embedding_yes_temp.pkl')
     df_recom=pd.read_pickle('for_recommend_df.pkl')
-    #df_book = pd.read_pickle('book_embedding.pkl')
-    df_genre = pd.read_pickle('genre_embedding.pkl')
     df_book = df_book.reset_index()
-    return df_book,df_recom, df_genre
+    return df_book,df_recom
 
 # Genre selection based on user preference
 def get_favor_genre(gen, genre_match_dict, genre_dict):
@@ -24,6 +21,15 @@ def get_favor_genre(gen, genre_match_dict, genre_dict):
     favor_genre = [item for sublist in [genre_dict.get(i) for i in select] for item in sublist]
     return select, favor_genre
 
+def model_loading(gen):
+    df=pd.read_pickle('recommend_book_list.pkl')
+    gen=set(gen)
+    book_list=[]
+    for i in range(len(df)):
+        tmp = set(df['select_genre'][i])
+        if gen == tmp:
+            book_list = df['topk_list'][i]
+    return book_list
 
 # Filter data based on preferred genre
 def filter_by_favor_genre(df_book, df_recom, favor_genre):
@@ -42,6 +48,8 @@ def filter_by_favor_genre(df_book, df_recom, favor_genre):
     filter_list = filter_df['ISBN_THIRTEEN_NO'].tolist()
     gcn_book_list=gcn_book['ISBN_THIRTEEN_NO'].tolist()
     return filter_list,gcn_book_list
+
+
 
 # Remove preferred genres from similar genres
 def remove_favor_genre_from_similar(favor_genre, similar_genre):
@@ -64,6 +72,7 @@ def filter_by_similar_genre(df_book, similar_genre):
         slice_df = pd.concat([slice_df, tmp])
     return slice_df
 
+
 # Filter data based on similar genres
 def gcn_list_filter_with_favor_genre(df_book, gcn_nonfilter_list,favor_genre):
     temp=df_book[df_book['ISBN_THIRTEEN_NO'].isin(gcn_nonfilter_list)]
@@ -81,6 +90,7 @@ def get_top_k_recommendations(select, genre_embedding_corpus, book_embedding_cor
         cos_scores = cosine_similarity([genre_embedding_corpus[i]], book_embedding_corpus)[0]
         sorted_indices = np.argsort(-cos_scores)
         top_results = sorted_indices[:top_k]
+
         li_top = []
         for idx in top_results:
             li_top.append(df_book['ISBN_THIRTEEN_NO'][idx])
@@ -92,7 +102,7 @@ def get_top_k_recommendations(select, genre_embedding_corpus, book_embedding_cor
 # Main function to run the recommendation system
 def run_recommendation_system(gen,user_id):
     # Load data
-    df_book,df_recom, df_genre = load_data()
+    df_book,df_recom = load_data()
     user_id=user_id
     # Genre mapping dictionaries
     genre_match_dict = {
@@ -126,33 +136,31 @@ def run_recommendation_system(gen,user_id):
         15: ['시간관리', '인간관계', '화술/협상', '역사', 'sf/과학', '판타지']
     }
     print("넘어온 장르 : ",gen)
+    book_list=model_loading(gen)
+
+
     #선호 장르 뽑기
     select, favor_genre = get_favor_genre(gen, genre_match_dict, genre_dict)
     print(select,favor_genre)
 
+
     #선호 장르 기반 도서 추천 리스트 추출 및 GCN 책 리스트 추출
-    filter_isbn_list,gcn_book_list= filter_by_favor_genre(df_book, df_recom, favor_genre)
+    #filter_isbn_list,gcn_book_list= filter_by_favor_genre(df_book, df_recom, favor_genre)
 
     #Nonfilter with embedding
-    similar_genre=get_similar_genre(select,genre_sim_dict,favor_genre)
-    slice_df=filter_by_similar_genre(df_book,similar_genre)
+    # similar_genre=get_similar_genre(select,genre_sim_dict,favor_genre)
+    # slice_df=filter_by_similar_genre(df_book,similar_genre)
 
     # book_embedding = slice_df['embedding2'].tolist()
     # book_embedding_corpus = torch.tensor(book_embedding)
 
 
-    genre_embedding = df_genre['embedding2'].tolist()
-    genre_embedding_corpus = torch.tensor(genre_embedding)
+    # genre_embedding = df_genre['embedding2'].tolist()
+    # genre_embedding_corpus = torch.tensor(genre_embedding)
 
-    #nonfilter_isbn_list=get_top_k_recommendations(select,genre_embedding_corpus, book_embedding_corpus,df_genre, df_book, top_k=100)
-    nonfilter_isbn_list=[]
 
-    # print("GCN : " ,gcn_book_list)
-    #
-    # print("FILTER : " ,filter_isbn_list)
-    # print("NONFILTER : " ,nonfilter_isbn_list)
 
-    return gcn_book_list,filter_isbn_list,nonfilter_isbn_list,favor_genre,df_book
+    return book_list,favor_genre,df_book
 
 
 
