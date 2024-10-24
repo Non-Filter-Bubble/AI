@@ -12,9 +12,8 @@ def load_data():
     df_book = pd.read_pickle('book_embedding_yes_temp.pkl')
     df_recom=pd.read_pickle('for_recommend_df.pkl')
     #df_book = pd.read_pickle('book_embedding.pkl')
-    df_genre = pd.read_pickle('genre_embedding.pkl')
     df_book = df_book.reset_index()
-    return df_book,df_recom, df_genre
+    return df_book,df_recom
 
 # Genre selection based on user preference
 def get_favor_genre(gen, genre_match_dict, genre_dict):
@@ -105,7 +104,7 @@ def get_top_k_recommendations(select, genre_embedding_corpus, book_embedding_cor
 # Main function to run the recommendation system
 def run_recommendation_system(gen,user_id):
     # Load data
-    df_book,df_recom, df_genre = load_data()
+    df_book,df_recom = load_data()
     user_id=user_id
     # Genre mapping dictionaries
     genre_match_dict = {
@@ -141,7 +140,6 @@ def run_recommendation_system(gen,user_id):
     print("넘어온 장르 : ",gen)
     book_list=model_loading(gen)
 
-    print(book_list)
 
     #선호 장르 뽑기
     select, favor_genre = get_favor_genre(gen, genre_match_dict, genre_dict)
