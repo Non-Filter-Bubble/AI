@@ -70,12 +70,13 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
 
     gen=list_genres
 
-    gcn_book_list,filter_sim_book,sim_book,favor_genre,df_book=run_recommendation_system(gen,user_id)
+
+    gcn_book_list,favor_genre,df_book=run_recommendation_system(gen,user_id)
 
     # GCN 추천 시스템에 넣을 책 리스트 나중에 주석 풀고 다시 해주세요
     print("books for gcn recommend system : ",gcn_book_list)
-    filter_book0, filter_book=run_GCN(str(user_id),gcn_book_list)
-    filter_book = list(map(str, filter_book))
+    #filter_book0, filter_book=run_GCN(str(user_id),gcn_book_list)
+    filter_book = list(map(str, gcn_book_list))
 
     gcn_filtered_list,gcn_non_filtered_list=gcn_list_filter_with_favor_genre(df_book, filter_book, favor_genre)
 
@@ -85,8 +86,8 @@ def process_genres_with_ai(user_id: int, genres: List[str]):
     # books_for_you = random.sample(books_for_you, 70)
 
     books_for_new=gcn_non_filtered_list
-    books_for_you = list(set(filter_sim_book + gcn_filtered_list))
-    books_for_you = random.sample(books_for_you, 70)
+    books_for_you = list(set(gcn_filtered_list))
+
 
     print("books from gcn filter recommend system : ",books_for_you)
     print("books for gcn nonfilter system : ",books_for_new)
