@@ -2,7 +2,7 @@
 
 import pandas as pd
 import numpy as np
-
+import time
 import torch
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -24,6 +24,7 @@ def get_favor_genre(gen, genre_match_dict, genre_dict):
 def model_loading(gen):
     df=pd.read_pickle('recommend_book_list.pkl')
     gen=set(gen)
+    time.sleep(2)
     book_list=[]
     for i in range(len(df)):
         tmp = set(df['select_genre'][i])
