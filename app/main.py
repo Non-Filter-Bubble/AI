@@ -1,6 +1,3 @@
-
-
-
 from book_recommend import *
 from fastapi import FastAPI, HTTPException
 import requests
