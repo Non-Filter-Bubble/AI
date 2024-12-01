@@ -19,9 +19,14 @@
   - 장르별 베스트셀러 확인
   - 도서 검색 및 해당 도서 소장한 도서관 정보 제공& 구매 사이트 제공
 
+
+## stack(AI) 
+- Python(Selenium, Pandas, Numpy, Fastapi, Scikit-learn)
+
+<br>
+
+
 ## 페이지 사진
 
 ![image](https://github.com/Non-Filter-Bubble/Backend/assets/129932517/4dffa8b0-d183-4fd0-8ace-cd18f133347d)
 
-## stack(AI) 
-- Python(Selenium, Pandas, Numpy, Fastapi, Scikit-learn)
